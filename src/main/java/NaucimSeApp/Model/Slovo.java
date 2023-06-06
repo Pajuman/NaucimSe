@@ -1,22 +1,34 @@
 package NaucimSeApp.Model;
 
-public class AkceDTO {
-    private String okruhSelection;
-    private String akceSelection;
+public class Slovo {
+    private final String cesky;
+    private final String spanelsky;
+    private int znalost;
+    private final int key;
 
-    public String getOkruhSelection() {
-        return okruhSelection;
+    public Slovo(int key, String cesky, String spanelsky, int znalost) {
+        this.key = key;
+        this.cesky = cesky;
+        this.spanelsky = spanelsky;
+        this.znalost = znalost;
     }
 
-    public void setOkruhSelection(String okruh) {
-        this.okruhSelection = okruh;
+    public int getKey(){
+        return key;
+    }
+    public String getCesky() {
+        return cesky;}
+
+    public String getSpanelsky() {
+        return spanelsky;
     }
 
-    public String getAkceSelection() {
-        return akceSelection;
+    public int getZnalost() {
+        return znalost;
     }
 
-    public void setAkceSelection(String akce) {
-        this.akceSelection = akceSelection;
+    public void setZnalost(int znalost) {
+        this.znalost = znalost;
     }
+
 }
