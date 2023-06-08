@@ -10,14 +10,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class SlovnikServlet extends HttpServlet {
-    SlovosFromDB slovosFromDB;
+    SlovaZDB slovaZDB;
     HttpSession session;
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         // Create a new instance of the Slovnik class
         Slovnik slovnik = new Slovnik();
-        ArrayList<Slovo> prehledSlov = slovosFromDB.fetchAnimals();
+        ArrayList<Slovo> prehledSlov = slovaZDB.fetchSlovos();
         slovnik.setPrehledSlov(prehledSlov);
 
         // Store the zoo instance in the session

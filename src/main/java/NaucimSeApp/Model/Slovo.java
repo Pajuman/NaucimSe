@@ -1,10 +1,13 @@
 package NaucimSeApp.Model;
 
+import org.springframework.stereotype.Service;
+
 public class Slovo {
+    private final int key;
     private final String cesky;
     private final String spanelsky;
     private int znalost;
-    private final int key;
+
 
     public Slovo(int key, String cesky, String spanelsky, int znalost) {
         this.key = key;
