@@ -47,12 +47,49 @@ public class Tabulka {
 
     }
 
-    public void pridejSlovo(String otazka, String odpoved){
-
+    public void pridejSlovo(String tabulka, String otazka, String odpoved){
+        try(
+                Connection spojeni = DriverManager.getConnection("jdbc:mysql://localhost/spanelstina?user=root&password=");
+                PreparedStatement dotaz = spojeni.prepareStatement("INSERT INTO " + tabulka + " VALUES(\n"+
+    "null, '" + otazka + "', '" + odpoved + "', 0);")){
+            dotaz.executeUpdate();
+        }
+        catch (
+                SQLException ex){
+            System.out.println("Chyboušek");
+        }
     }
 
-    public void smazSlovo(int id){
+    public void zmenSlovo(int id, String tabulka, String otazka, String odpoved){
+        try(
+                Connection spojeni = DriverManager.getConnection("jdbc:mysql://localhost/spanelstina?user=root&password=");
+                PreparedStatement dotaz = spojeni.prepareStatement("UPDATE " + tabulka + " \n" +
+                        "SET \n" +
+                        "    cesky = '" + otazka + "' , \n" +
+                        "    spanelsky = '" + odpoved + "' , \n" +
+                        "    znalost =0\n" +
+                        "WHERE id = " + id + ";"
+                )){
+            dotaz.executeUpdate();
+        }
+        catch (
+                SQLException ex){
+            System.out.println("Chyboučíček");
+        }
+    }
 
+    public void smazSlovo(int id, String tabulka){
+        try(
+                Connection spojeni = DriverManager.getConnection("jdbc:mysql://localhost/spanelstina?user=root&password=");
+                PreparedStatement dotaz = spojeni.prepareStatement(
+                        "DELETE FROM " + tabulka + " WHERE id = " + id + ";"
+                )){
+            dotaz.executeUpdate();
+        }
+        catch (
+                SQLException ex){
+            System.out.println("Chyběnka");
+        }
     }
 
     public ArrayList<Slovo> fetchSlovos(String tabulka){

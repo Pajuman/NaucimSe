@@ -28,5 +28,35 @@
 
         </tbody>
     </table>
+    <br><br>
+    <a href="/">Zpět na hlavní stránku</a>
+
+    <form th:action="'/ukazat/pridaniSlova/' + ${okruh}" method="post">
+        <h4>Přidat slovo</h4>
+        <label for="idSlovaPridat">Napiš obě části slova, které chceš přidat:</label><br>
+        <input type="text" id="idSlovaPridat" name="otazka" placeholder="napiš sem otázku">
+        <input type="text" name="odpoved" placeholder="napiš sem odpověď"><br>
+        <input type="submit" value="přidat">
+    </form>
+
+    <br><br>
+
+    <form th:action="'/ukazat/zmenaSlova/' + ${okruh}" method="post">
+        <h4>Změnit slovo</h4>
+        <label for="idSlovaZmenit">Napiš ID slova, které chceš změnit:</label><br>
+        <input type="text" id="idSlovaZmenit" name="idSlova">
+        <input type="text" name="otazka" placeholder="napiš sem správný výraz">
+        <input type="text" name="odpoved" placeholder="napiš sem správný výraz"><br>
+        <input type="submit" value="změnit">
+    </form>
+
+    <br><br>
+
+    <form th:action="'/ukazat/smazaniSlova/' + ${okruh}" method="post">
+        <h4>Smaž slovo</h4>
+        <label for="idSlovaSmazat">Napiš ID slova, které chceš změnit:</label><br>
+        <input type="text" id="idSlovaSmazat" name="idSlova"><br>
+        <input type="submit" value="smazat">
+    </form>
 </body>
 </html>

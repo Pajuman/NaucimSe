@@ -52,7 +52,7 @@ public class MainUIController {
 
         if(akce.equals("vyzkouset_akce")){
             resultPage = "redirect:/vyzkouset";
-        } else {resultPage = "redirect:/ukazat";}
+        } else {resultPage = "redirect:/ukazat/" + okruh;}
 
         return resultPage;
 
