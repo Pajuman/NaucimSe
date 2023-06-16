@@ -1,40 +1,33 @@
 package NaucimSeApp.Controller;
 
+import NaucimSeApp.Model.Report;
 import NaucimSeApp.Model.Slovnik;
-import NaucimSeApp.Model.Slovo;
 import NaucimSeApp.Model.Tabulka;
-import NaucimSeApp.Model.VytvorSlovnik;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 
 @Controller
 @RequestMapping("/")
 public class MainUIController {
-    @Autowired
-    Slovnik slovnik;
-    @Autowired
-    VytvorSlovnik vytvorSlovnik;
+
     @Autowired
     Tabulka tabulka;
 
+    @Autowired
+    Report report;
+
+    //"okruhy" jsou seznam tabulek v databázi
+    //"okruhy" jsou poslány do HTML jako JSON a odtud dále do JS pro práci s DOM (tabulky se přidají jako option do selectu)
     @GetMapping
     public String nactiMainUI(Model model) throws JsonProcessingException {
 
-//        slovnik = vytvorSlovnik.vytvorSlovnik();
-//        Slovo slovo = new Slovo(1,"aaa", "bbb", 5);
-
         ArrayList<String> okruhy = tabulka.prehledTabulek();
-
 
         ObjectMapper objectMapper = new ObjectMapper();
         String json = objectMapper.writeValueAsString(okruhy);
@@ -43,28 +36,42 @@ public class MainUIController {
         return "mainUI.html";
     }
 
+    //poté, co je vybrán okruh (tabulka v DB) a akce, se tlačítkem "spustit" provede akce (skrz redirect se aktivuje jiný Controller)
+    //pro přenos informace "okruh" mezi Controllery se použil query v URL (akce + okruh)
     @PostMapping("/submit")
-    public String prijmiAkci(@RequestParam("okruh_selection") String okruh, @RequestParam("akce_selection") String akce, HttpSession session) {
-
-        session.setAttribute("okruh", okruh);
+    public String prijmiAkci(@RequestParam("okruh_selection") String okruh, @RequestParam("akce_selection") String akce) {
 
         String resultPage;
 
         if(akce.equals("vyzkouset_akce")){
-            resultPage = "redirect:/vyzkouset";
-        } else {resultPage = "redirect:/ukazat/" + okruh;}
+            resultPage = "redirect:/vyzkouset/" + okruh;;
+        } else {resultPage = "redirect:/zobrazit/" + okruh;}
 
         return resultPage;
 
     }
 
+    //vytvoří nový "okruh" (tabulku) v databázi a vypíše barevně zprávu o úspěchu nebo neúspěchu
     @PostMapping("/novyOkruh")
-    public String novyOkruh(@RequestParam("novyOkruhNazev") String novyOkruhNazev, Model model) {
+    public String novyOkruh(@RequestParam("novyOkruhNazev") String novyOkruhNazev, Model model)  throws JsonProcessingException {
 
-        tabulka.vytvorTabulku(novyOkruhNazev);
+        report = tabulka.vytvorTabulku(novyOkruhNazev);
         model.addAttribute("okruh", novyOkruhNazev);
 
-        return "redirect:/pridejslovo/" + novyOkruhNazev;
+        if(report.getPozitivni()) {
+            model.addAttribute("pozitivni", report.getZprava());
+        }
+        else{
+            model.addAttribute("negativni", report.getZprava());
+        }
+
+        ArrayList<String> okruhy = tabulka.prehledTabulek();
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        String json = objectMapper.writeValueAsString(okruhy);
+        model.addAttribute("okruhy", json);
+
+        return "mainUI.html";
 
     }
 }

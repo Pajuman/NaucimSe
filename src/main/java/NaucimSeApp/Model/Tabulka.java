@@ -8,6 +8,8 @@ import java.util.ArrayList;
 @Service
 public class Tabulka {
 
+    Report report = new Report();
+
     public ArrayList<String> prehledTabulek(){
 
         ArrayList<String> jmenaTabulek = new ArrayList<>();
@@ -30,37 +32,50 @@ public class Tabulka {
         return jmenaTabulek;
     }
 
-    public void vytvorTabulku(String nazev){
+    public Report vytvorTabulku(String nazev){
         try(
             Connection spojeni = DriverManager.getConnection("jdbc:mysql://localhost/spanelstina?user=root&password=");
+
+
+
             PreparedStatement dotaz = spojeni.prepareStatement("CREATE TABLE " + nazev + " (\n" +
                     "    id int PRIMARY KEY AUTO_INCREMENT,\n" +
-                    "    cesky varchar(50),\n" +
-                    "    spanelsky varchar(50),\n" +
+                    "    cesky varchar(200),\n" +
+                    "    spanelsky varchar(200),\n" +
                     "    znalost int);")){
             dotaz.executeUpdate();
+            report.setPozitivni(true);
+            report.setZprava("Tabulka úspěšně založena.");
         }
         catch (
                 SQLException ex){
-            System.out.println("Chybouš");
+            report.setPozitivni(false);
+            report.setZprava("Něco se nezdařilo (tabulka s tímto názvem již možná existuje).");
         }
+
+        return report;
 
     }
 
-    public void pridejSlovo(String tabulka, String otazka, String odpoved){
+    public Report pridejSlovo(String tabulka, String otazka, String odpoved){
         try(
                 Connection spojeni = DriverManager.getConnection("jdbc:mysql://localhost/spanelstina?user=root&password=");
                 PreparedStatement dotaz = spojeni.prepareStatement("INSERT INTO " + tabulka + " VALUES(\n"+
     "null, '" + otazka + "', '" + odpoved + "', 0);")){
             dotaz.executeUpdate();
+            report.setPozitivni(true);
+            report.setZprava("Slovo úspěšně přidáno.");
         }
         catch (
                 SQLException ex){
-            System.out.println("Chyboušek");
+            report.setPozitivni(false);
+            report.setZprava("Slovo se nepovedlo přidat. Zkontroluj, jestli už neexistuje.");
         }
+
+        return report;
     }
 
-    public void zmenSlovo(int id, String tabulka, String otazka, String odpoved){
+    public Report zmenSlovo(int id, String tabulka, String otazka, String odpoved){
         try(
                 Connection spojeni = DriverManager.getConnection("jdbc:mysql://localhost/spanelstina?user=root&password=");
                 PreparedStatement dotaz = spojeni.prepareStatement("UPDATE " + tabulka + " \n" +
@@ -71,25 +86,35 @@ public class Tabulka {
                         "WHERE id = " + id + ";"
                 )){
             dotaz.executeUpdate();
+            report.setPozitivni(true);
+            report.setZprava("Slovo úspěšně změněno.");
         }
         catch (
                 SQLException ex){
-            System.out.println("Chyboučíček");
+            report.setPozitivni(false);
+            report.setZprava("Slovo se nepovedlo změnit. Odeslal jsi správné zadání?");
         }
+
+        return report;
     }
 
-    public void smazSlovo(int id, String tabulka){
+    public Report smazSlovo(int id, String tabulka){
         try(
                 Connection spojeni = DriverManager.getConnection("jdbc:mysql://localhost/spanelstina?user=root&password=");
                 PreparedStatement dotaz = spojeni.prepareStatement(
                         "DELETE FROM " + tabulka + " WHERE id = " + id + ";"
                 )){
             dotaz.executeUpdate();
+            report.setPozitivni(true);
+            report.setZprava("Slovo úspěšně smazáno.");
         }
         catch (
                 SQLException ex){
-            System.out.println("Chyběnka");
+            report.setPozitivni(false);
+            report.setZprava("Slovo se nepovedlo smazat. Odeslal jsi správné zadání?");
         }
+
+        return report;
     }
 
     public ArrayList<Slovo> fetchSlovos(String tabulka){
@@ -99,7 +124,6 @@ public class Tabulka {
                 Connection spojeni = DriverManager.getConnection("jdbc:mysql://localhost/spanelstina?user=root&password=");
                 PreparedStatement dotaz = spojeni.prepareStatement("SELECT*FROM " + tabulka + ";")){
             try(ResultSet vysledky = dotaz.executeQuery();){
-//                vysledky.next();
                 while(vysledky.next()){
                     Slovo slovo = new Slovo(vysledky.getInt(1), vysledky.getString(2), vysledky.getString(3), vysledky.getInt(4));
                     seznamSlov.add(slovo);
@@ -108,13 +132,10 @@ public class Tabulka {
         }
         catch (
                 SQLException ex){
-            System.out.println("Chybaaa");
+            System.out.println("Nepovedlo se najít slova v tabulce " + tabulka);
         }
 
         return seznamSlov;
     }
-
-
-
 
 }

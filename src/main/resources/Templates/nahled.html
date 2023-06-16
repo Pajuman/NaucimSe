@@ -15,48 +15,66 @@
     <title>Title</title>
 </head>
 <body>
+<div class="container">
+    <div class="row">
+        <div class="col-3"></div>
+        <div class="col-6">
 
-    <h2 th:text = "${okruh}"></h2>
-    <table>
-        <thead>
-        <th>ID</th>
-        <th>otázka</th>
-        <th>odpověď</th>
-        <th>znalost</th>
-        </thead>
-        <tbody id="tabulka">
+            <h2 th:text = "${okruh}"></h2>
+            <div class="d-flex justify-content-between">
+                <table>
+                    <thead>
+                    <th>ID</th>
+                    <th>otázka</th>
+                    <th>odpověď</th>
+                    <th>znalost</th>
+                    </thead>
+                    <tbody id="tabulka">
 
-        </tbody>
-    </table>
-    <br><br>
-    <a href="/">Zpět na hlavní stránku</a>
+                    </tbody>
+                </table>
+                <p th:text = "${pozitivni}" id="pozitivni" ></p>
+                <p th:text = "${negativni}" id="negativni" ></p>
+            </div>
+            <br><br>
 
-    <form th:action="'/ukazat/pridaniSlova/' + ${okruh}" method="post">
-        <h4>Přidat slovo</h4>
-        <label for="idSlovaPridat">Napiš obě části slova, které chceš přidat:</label><br>
-        <input type="text" id="idSlovaPridat" name="otazka" placeholder="napiš sem otázku">
-        <input type="text" name="odpoved" placeholder="napiš sem odpověď"><br>
-        <input type="submit" value="přidat">
-    </form>
+            <h4>Přidat slovo</h4>
+            <form th:action="'/zobrazit/pridaniSlova/' + ${okruh}" method="post" class="shadow p-3">
+                <label for="idSlovaPridat">Napiš obě části slova, které chceš přidat:</label><br>
+                <input type="text" id="idSlovaPridat" name="otazka" placeholder="otázka">
+                <input type="text" name="odpoved" placeholder="odpověď"><br><br>
+                <input type="submit" value="přidat">
+            </form>
 
-    <br><br>
+            <br><br>
 
-    <form th:action="'/ukazat/zmenaSlova/' + ${okruh}" method="post">
-        <h4>Změnit slovo</h4>
-        <label for="idSlovaZmenit">Napiš ID slova, které chceš změnit:</label><br>
-        <input type="text" id="idSlovaZmenit" name="idSlova">
-        <input type="text" name="otazka" placeholder="napiš sem správný výraz">
-        <input type="text" name="odpoved" placeholder="napiš sem správný výraz"><br>
-        <input type="submit" value="změnit">
-    </form>
+            <h4>Změnit slovo</h4>
+            <form th:action="'/zobrazit/zmenaSlova/' + ${okruh}" method="post" class="shadow p-3">
+                <label for="idSlovaZmenit">Napiš ID slova, které chceš změnit:</label><br>
+                <input type="text" id="idSlovaZmenit" name="idSlova" placeholder="id"><br>
+                <input type="text" name="otazka" placeholder="otázka">
+                <input type="text" name="odpoved" placeholder="odpověď"><br><br>
+                <input type="submit" value="změnit">
+            </form>
 
-    <br><br>
+            <br><br>
 
-    <form th:action="'/ukazat/smazaniSlova/' + ${okruh}" method="post">
-        <h4>Smaž slovo</h4>
-        <label for="idSlovaSmazat">Napiš ID slova, které chceš změnit:</label><br>
-        <input type="text" id="idSlovaSmazat" name="idSlova"><br>
-        <input type="submit" value="smazat">
-    </form>
+            <h4>Smaž slovo</h4>
+            <form th:action="'/zobrazit/smazaniSlova/' + ${okruh}" method="post" class="shadow p-3">
+                <label for="idSlovaSmazat">Napiš ID slova, které chceš změnit:</label><br>
+                <input type="text" id="idSlovaSmazat" name="idSlova" placeholder="id"><br><br>
+                <input type="submit" value="smazat">
+            </form>
+
+            <br>
+            <a href="/">Zpět na hlavní stránku</a>
+
+        </div>
+        <div class="col-3"></div>
+    </div>
+
+
+</div>
+
 </body>
 </html>

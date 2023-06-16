@@ -1,28 +1,13 @@
-let zasoba = [
-    {id:1, cesky:"stálo prase na terase, houpalo se na ocase, tak už víš?", anglicky:"dog", znalost:0},
-    {id:2, cesky:"očak", anglicky:"cat", znalost:0},
-    {id:3, cesky:"dům", anglicky:"house", znalost:0},
-    {id:4, cesky:"slon", anglicky:"elephant", znalost:0},
-    {id:5, cesky:"velryba", anglicky:"whale", znalost:0},
-    {id:6, cesky:"delfín", anglicky:"dolphin", znalost:0},
-    {id:7, cesky:"myš", anglicky:"mouse", znalost:0},
-    {id:8, cesky:"velbloud", anglicky:"camel", znalost:0},
-    {id:9, cesky:"pavouk", anglicky:"spider", znalost:0},
-    {id:10, cesky:"kudlanka", anglicky:"mantis", znalost:0}
-]
+let zasoba;
 
-let puvodni = [
-    {id:1, cesky:"stálo prase na terase, houpalo se na ocase, tak už víš?", anglicky:"dog", znalost:0},
-    {id:2, cesky:"očak", anglicky:"cat", znalost:0},
-    {id:3, cesky:"dům", anglicky:"house", znalost:0},
-    {id:4, cesky:"slon", anglicky:"elephant", znalost:0},
-    {id:5, cesky:"velryba", anglicky:"whale", znalost:0},
-    {id:6, cesky:"delfín", anglicky:"dolphin", znalost:0},
-    {id:7, cesky:"myš", anglicky:"mouse", znalost:0},
-    {id:8, cesky:"velbloud", anglicky:"camel", znalost:0},
-    {id:9, cesky:"pavouk", anglicky:"spider", znalost:0},
-    {id:10, cesky:"kudlanka", anglicky:"mantis", znalost:0}
-]
+    try {
+
+        //proměnná "slovicka" je získána z jiného scriptu umístěného v HTML
+        zasoba = JSON.parse(slovicka.replace(/&quot;/g,'"'));
+
+    } catch (ex) {
+        console.error(ex);
+    }
 
 let slovo;
 let stareSlovo;
@@ -49,7 +34,7 @@ function vyberSlovo(){
     seradZnalost();
     vylosuj();
     document.getElementById("otazka").textContent = slovo.cesky;
-    document.getElementById("odpoved").textContent = slovo.anglicky;
+    document.getElementById("odpoved").textContent = slovo.spanelsky;
     document.getElementById("pocet").textContent = "Počítadlo " + pocet;
 }
 
@@ -69,8 +54,29 @@ function nevedel (){
     vyberSlovo();
 }
 
-function konec (){
-    seradId();
+function zobrazKonec (){
+    const zkouseniHTML = document.getElementById("zkouseni");
+    zkouseniHTML.innerHTML = "";
 
+    const hlavaTabulky = document.getElementById("hlavaTabulky");
+    hlavaTabulky.innerHTML = "<th>ID</th>\n" +
+        "        <th>otázka</th>\n" +
+        "        <th>odpověď</th>\n" +
+        "        <th>znalost</th>";
 
+    const tabulka = document.getElementById("tabulka");
+
+    zasoba.forEach((element) => {
+        const radek = document.createElement("tr");
+        Object.values(element).forEach((value) =>{
+            const bunka = document.createElement("td");
+            const bunkaText = document.createTextNode(value);
+            bunka.appendChild(bunkaText);
+            radek.appendChild(bunka);
+        })
+        tabulka.appendChild(radek);
+    });
+
+    const zpet = document.getElementById("zpet");
+    zpet.innerText = "Zpět na hlavní stranu";
 }

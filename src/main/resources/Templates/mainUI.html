@@ -10,55 +10,54 @@
         var okruhy = "[[${okruhy}]]";
                </script>
     <script type="text/javascript" th:src="@{/script.js}"></script>
+    <link rel="stylesheet" href="style.css">
     <title>Naučím se</title>
 </head>
 <body>
 
 <div class="container">
+    <div class="row">
     <div class="col-3"></div>
     <div class="col-6">
-        <h1 class="">Naučím se</h1>
-        <p>Níže si můžete vybrat z okruhů, ze kterých se chcete nechat vyzkoušet.</p>
+        <h1 class="text-center">Naučím se</h1>
+        <br>
 
         <!--ve formuláři vyberu projekt a akci-->
-        <form action="/submit" method="post">
+        <form action="/submit" method="post" class="shadow p-3">
             <div>
-                Okruh:
-                <select name="okruh_selection" id="okruh_selection">
-
-                </select>
+                <select name="okruh_selection" id="okruh_selection"></select>
+                <label for="okruh_selection">výběr okruhu</label>
             </div>
             <br>
             <div>
-                Akce:
                 <select name="akce_selection" id="akce_selection">
                     <option value="vyzkouset_akce">vyzkoušet</option>
                     <option value="ukazat_akce">ukázat</option>
                 </select>
+                <label for="akce_selection">výběr akce</label>
             </div>
             <br>
-            <input type="submit" value="Spustit">
-
+            <input type="submit" value="Spustit"  class="btn btn-success">
         </form>
+
+        <br><br>
+
+        <form action="/novyOkruh" method="post" class="shadow p-3">
+            <input type="text" name="novyOkruhNazev" id="novyOkruhNazev">
+            <label for="novyOkruhNazev">název nového okruhu</label><br><br>
+            <input type="submit" value="Nový okruh" class="btn btn-success">
+        </form>
+
+        <br>
+
+        <a href="oAplikaci">O aplikaci "Naučím se"</a>
+        <p th:text = "${pozitivni}" id="pozitivni" ></p>
+        <p th:text = "${negativni}" id="negativni" ></p>
     </div>
     <div class="col-3"></div>
-
-    <div class="row">
-        <div class="col-3"></div>
-        <div class="col-6">
-            <h3 class="">Založ nový okruh</h3>
-            <form action="/novyOkruh" method="post">
-                <input type="text" name="novyOkruhNazev">
-                <input type="submit">
-
-            </form>
-        </div>
-        <div class="col-3"></div>
     </div>
 
 </div>
-
-
 
 
 </body>

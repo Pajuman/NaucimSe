@@ -13,7 +13,4 @@ window.onload = function (){
     } catch (ex) {
       console.error(ex);
     }
-
-
-
 }
