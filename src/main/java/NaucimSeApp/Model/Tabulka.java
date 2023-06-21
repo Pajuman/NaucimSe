@@ -58,41 +58,55 @@ public class Tabulka {
     }
 
     public Report pridejSlovo(String tabulka, String otazka, String odpoved){
-        try(
-                Connection spojeni = DriverManager.getConnection("jdbc:mysql://localhost/spanelstina?user=root&password=");
-                PreparedStatement dotaz = spojeni.prepareStatement("INSERT INTO " + tabulka + " VALUES(\n"+
-    "null, '" + otazka + "', '" + odpoved + "', 0);")){
-            dotaz.executeUpdate();
-            report.setPozitivni(true);
-            report.setZprava("Slovo úspěšně přidáno.");
-        }
-        catch (
-                SQLException ex){
+        if(otazka.equals("") && odpoved.equals("")){
             report.setPozitivni(false);
-            report.setZprava("Slovo se nepovedlo přidat. Zkontroluj, jestli už neexistuje.");
+            report.setZprava("Nemůžeš zadat prázdné hodnoty.");
+        }
+        else {
+            try (
+                    Connection spojeni = DriverManager.getConnection("jdbc:mysql://localhost/spanelstina?user=root&password=");
+                    PreparedStatement dotaz = spojeni.prepareStatement("INSERT INTO " + tabulka + " VALUES(\n" +
+                            "null, '" + otazka + "', '" + odpoved + "', 0);")) {
+                dotaz.executeUpdate();
+                report.setPozitivni(true);
+                report.setZprava("Slovo úspěšně přidáno.");
+            } catch (
+                    SQLException ex) {
+                report.setPozitivni(false);
+                report.setZprava("Slovo se nepovedlo přidat. Zkontroluj, jestli už neexistuje.");
+            }
         }
 
         return report;
     }
 
     public Report zmenSlovo(int id, String tabulka, String otazka, String odpoved){
-        try(
-                Connection spojeni = DriverManager.getConnection("jdbc:mysql://localhost/spanelstina?user=root&password=");
-                PreparedStatement dotaz = spojeni.prepareStatement("UPDATE " + tabulka + " \n" +
-                        "SET \n" +
-                        "    cesky = '" + otazka + "' , \n" +
-                        "    spanelsky = '" + odpoved + "' , \n" +
-                        "    znalost =0\n" +
-                        "WHERE id = " + id + ";"
-                )){
-            dotaz.executeUpdate();
-            report.setPozitivni(true);
-            report.setZprava("Slovo úspěšně změněno.");
-        }
-        catch (
-                SQLException ex){
+        if(otazka.equals("") && odpoved.equals("")){
             report.setPozitivni(false);
-            report.setZprava("Slovo se nepovedlo změnit. Odeslal jsi správné zadání?");
+            report.setZprava("Nemůžeš zadat prázdné hodnoty.");
+        }
+        else {
+            try (
+                    Connection spojeni = DriverManager.getConnection("jdbc:mysql://localhost/spanelstina?user=root&password=");
+                    PreparedStatement dotazStrict = spojeni.prepareStatement(
+                            "SET SESSION sql_mode = 'STRICT_TRANS_TABLES';");
+
+                    PreparedStatement dotaz = spojeni.prepareStatement(
+                            "UPDATE " + tabulka + " \n" +
+                                "SET \n" +
+                                "    otazka = '" + otazka + "' , \n" +
+                                "    odpoved = '" + odpoved + "' , \n" +
+                                "WHERE id = " + id + ";"
+                    )){
+                dotazStrict.execute();
+                dotaz.executeUpdate();
+                report.setPozitivni(true);
+                report.setZprava("Slovo úspěšně změněno.");
+            } catch (
+                    SQLException ex) {
+                report.setPozitivni(false);
+                report.setZprava("Slovo se nepovedlo změnit. Odeslal jsi správné zadání?");
+            }
         }
 
         return report;
@@ -101,9 +115,13 @@ public class Tabulka {
     public Report smazSlovo(int id, String tabulka){
         try(
                 Connection spojeni = DriverManager.getConnection("jdbc:mysql://localhost/spanelstina?user=root&password=");
+                PreparedStatement dotazStrict = spojeni.prepareStatement(
+                        "SET SESSION sql_mode = 'STRICT_TRANS_TABLES';");
+
                 PreparedStatement dotaz = spojeni.prepareStatement(
                         "DELETE FROM " + tabulka + " WHERE id = " + id + ";"
                 )){
+            dotazStrict.execute();
             dotaz.executeUpdate();
             report.setPozitivni(true);
             report.setZprava("Slovo úspěšně smazáno.");
@@ -113,7 +131,8 @@ public class Tabulka {
             report.setPozitivni(false);
             report.setZprava("Slovo se nepovedlo smazat. Odeslal jsi správné zadání?");
         }
-
+        System.out.println("SET SESSION sql_mode = 'STRICT_TRANS_TABLES';\n" +
+                "DELETE FROM " + tabulka + " WHERE id = " + id + ";");
         return report;
     }
 
@@ -134,6 +153,8 @@ public class Tabulka {
                 SQLException ex){
             System.out.println("Nepovedlo se najít slova v tabulce " + tabulka);
         }
+
+        System.out.println(seznamSlov.size());
 
         return seznamSlov;
     }

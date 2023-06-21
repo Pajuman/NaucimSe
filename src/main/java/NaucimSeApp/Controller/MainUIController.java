@@ -2,6 +2,7 @@ package NaucimSeApp.Controller;
 
 import NaucimSeApp.Model.Report;
 import NaucimSeApp.Model.Slovnik;
+import NaucimSeApp.Model.Slovo;
 import NaucimSeApp.Model.Tabulka;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
 
@@ -39,13 +41,21 @@ public class MainUIController {
     //poté, co je vybrán okruh (tabulka v DB) a akce, se tlačítkem "spustit" provede akce (skrz redirect se aktivuje jiný Controller)
     //pro přenos informace "okruh" mezi Controllery se použil query v URL (akce + okruh)
     @PostMapping("/submit")
-    public String prijmiAkci(@RequestParam("okruh_selection") String okruh, @RequestParam("akce_selection") String akce) {
+    public String prijmiAkci(@RequestParam("okruh_selection") String okruh, @RequestParam("akce_selection") String akce, RedirectAttributes redirectAttributes) {
 
         String resultPage;
+        ArrayList<Slovo> slovicka = tabulka.fetchSlovos(okruh);
 
-        if(akce.equals("vyzkouset_akce")){
-            resultPage = "redirect:/vyzkouset/" + okruh;;
-        } else {resultPage = "redirect:/zobrazit/" + okruh;}
+        if(akce.equals("ukazat_akce")){
+            resultPage = "redirect:/zobrazit/" + okruh;
+        }
+        else if(slovicka.size() < 3){
+            resultPage = "redirect:/";
+            redirectAttributes.addFlashAttribute("negativni", "Okruh musí mít alespoň 3 otázky, abyses mohl nechat vyzkoušet.");
+        }
+        else{
+            resultPage = "redirect:/vyzkouset/" + okruh;
+        }
 
         return resultPage;
 

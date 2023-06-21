@@ -17,10 +17,6 @@ function seradZnalost (){
     zasoba.sort(function (a, b){return a.znalost - b.znalost});
 }
 
-function seradId (){
-    zasoba.sort(function (a, b){return a.id - b.id});
-}
-
 function vylosuj (){
     do {
         stareSlovo = slovo;

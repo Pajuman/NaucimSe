@@ -15,54 +15,56 @@
 </head>
 <body>
 
-<h2 th:text = "${okruh}" class="text-center"></h2>
+
 <div class="container">
-    <div class="row" id="zkouseni">
+
+
+    <div class="row">
         <div class="col-3"></div>
         <div class="col-6">
-            <div class="flip-card">
-                <div class="flip-card-inner">
-                    <div class="flip-card-front" id="otazka">
-                        česky
-                    </div>
-                    <div class="flip-card-back" id="odpoved">
-                        španělsky
+            <h2 th:text = "${okruh}" class="centered"></h2>
+            <div id="zkouseni">
+                <div class="flip-card">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front" id="otazka">
+                            česky
+                        </div>
+                        <div class="flip-card-back" id="odpoved">
+                            španělsky
+                        </div>
                     </div>
                 </div>
-            </div>
-            <br>
-            <div class="row d-flex justify-content-center">
-                <div class="btn-group">
-                    <button onclick="vedel()" class="btn btn-success btn-zkouseni">Vím</button>
-                    <button onclick="nevedel()" class="btn btn-warning btn-zkouseni">Nevím</button>
+                <br>
+                <div class="row d-flex justify-content-center">
+                    <div class="btn-group">
+                        <button onclick="vedel()" class="btn btn-success btn-zkouseni">Vím</button>
+                        <button onclick="nevedel()" class="btn btn-warning btn-zkouseni">Nevím</button>
+                    </div>
                 </div>
-            </div>
-            <br>
-            <div class="row d-flex justify-content-center">
-                <button onclick="zobrazKonec()" class="btn btn-primary">Konec</button>
-            </div>
+                <br>
+                <div class="row d-flex justify-content-center">
+                    <button onclick="zobrazKonec()" class="btn btn-primary">Konec</button>
+                </div>
 
-            <br>
+                <br>
 
-            <span id="pocet"></span>
+                <span id="pocet"></span>
+            </div>
+            <div id="vysledek">
+                <table>
+                    <thead id="hlavaTabulky">
+                    </thead>
+                    <tbody id="tabulka">
+                    </tbody>
+                </table>
+                <br>
+                <a href="/" id="zpet"></a>
+            </div>
         </div>
         <div class="col-3"></div>
     </div>
 
-    <div class="row" id="vysledek">
-        <div class="col-3"></div>
-        <div class="col-6">
-            <table>
-                <thead id="hlavaTabulky">
-                </thead>
-                <tbody id="tabulka">
-                </tbody>
-            </table>
-            <br>
-            <a href="/" id="zpet"></a>
-        </div>
-        <div class="col-3"></div>
-    </div>
+
 
 </div>
 

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
 
@@ -40,14 +41,14 @@ public class ZobrazitController {
 
     //přidání nového slova do tabulky (otázka, odpověď)
     @PostMapping("/pridaniSlova/{okruh}")
-    public String noveSlovo(@PathVariable String okruh, @RequestParam("otazka") String otazka, @RequestParam("odpoved") String odpoved, Model model) {
+    public String noveSlovo(@PathVariable String okruh, @RequestParam("otazka") String otazka, @RequestParam("odpoved") String odpoved, RedirectAttributes redirectAttributes) {
 
         report = tabulka.pridejSlovo(okruh, otazka, odpoved);
         if(report.getPozitivni()) {
-            model.addAttribute("pozitivni", report.getZprava());
+            redirectAttributes.addFlashAttribute("pozitivni", report.getZprava());
         }
         else{
-            model.addAttribute("negativni", report.getZprava());
+            redirectAttributes.addFlashAttribute("negativni", report.getZprava());
         }
 
         return "redirect:/zobrazit/" + okruh;
@@ -55,14 +56,14 @@ public class ZobrazitController {
 
     //úprava stávajícího slova v tabulce (stávající id, nová otázka, nová odpověď)
     @PostMapping("/zmenaSlova/{okruh}")
-    public String zmenaSlova(@PathVariable String okruh, @RequestParam("idSlova") int id, @RequestParam("otazka") String otazka, @RequestParam("odpoved") String odpoved, Model model) {
+    public String zmenaSlova(@PathVariable String okruh, @RequestParam("idSlova") int id, @RequestParam("otazka") String otazka, @RequestParam("odpoved") String odpoved, RedirectAttributes redirectAttributes) {
 
         report = tabulka.zmenSlovo(id, okruh, otazka, odpoved);
         if(report.getPozitivni()) {
-            model.addAttribute("pozitivni", report.getZprava());
+            redirectAttributes.addFlashAttribute("pozitivni", report.getZprava());
         }
         else{
-            model.addAttribute("negativni", report.getZprava());
+            redirectAttributes.addFlashAttribute("negativni", report.getZprava());
         }
 
         return "redirect:/zobrazit/" + okruh;
@@ -70,15 +71,15 @@ public class ZobrazitController {
 
     //smázání stávajícího slova na základě stávající id (id nebude znovu využito)
     @PostMapping("/smazaniSlova/{okruh}")
-    public String smazaniSlova(@PathVariable String okruh, @RequestParam("idSlova") int id, Model model) {
+    public String smazaniSlova(@PathVariable String okruh, @RequestParam("idSlova") int id, RedirectAttributes redirectAttributes) {
 
         report = tabulka.smazSlovo(id, okruh);
         System.out.println(report.getZprava() + report.getPozitivni());
         if(report.getPozitivni()) {
-            model.addAttribute("pozitivni", report.getZprava());
+            redirectAttributes.addFlashAttribute("pozitivni", report.getZprava());
         }
         else{
-            model.addAttribute("negativni", report.getZprava());
+            redirectAttributes.addFlashAttribute("negativni", report.getZprava());
         }
 
         return "redirect:/zobrazit/" + okruh;

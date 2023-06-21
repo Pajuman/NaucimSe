@@ -30,6 +30,7 @@ public class VyzkousetController {
         ObjectMapper objectMapper = new ObjectMapper();
         String json = objectMapper.writeValueAsString(slovicka);
 
+
         model.addAttribute("slovicka", json);
         model.addAttribute("okruh", okruh);
 
