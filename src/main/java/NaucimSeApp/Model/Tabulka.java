@@ -26,7 +26,7 @@ public class Tabulka {
         }
         catch (
                 SQLException ex){
-            System.out.println("Chybaaa");
+            System.out.println("Nepovedlo se načíst přehled okruhů.");
         }
 
         return jmenaTabulek;
@@ -43,6 +43,7 @@ public class Tabulka {
                     "    cesky varchar(200),\n" +
                     "    spanelsky varchar(200),\n" +
                     "    znalost int);")){
+
             dotaz.executeUpdate();
             report.setPozitivni(true);
             report.setZprava("Tabulka úspěšně založena.");
@@ -66,7 +67,11 @@ public class Tabulka {
             try (
                     Connection spojeni = DriverManager.getConnection("jdbc:mysql://localhost/spanelstina?user=root&password=");
                     PreparedStatement dotaz = spojeni.prepareStatement("INSERT INTO " + tabulka + " VALUES(\n" +
-                            "null, '" + otazka + "', '" + odpoved + "', 0);")) {
+                            "null, ?, ?, 0);")) {
+
+                dotaz.setString(1, otazka);
+                dotaz.setString(2, odpoved);
+
                 dotaz.executeUpdate();
                 report.setPozitivni(true);
                 report.setZprava("Slovo úspěšně přidáno.");
@@ -88,18 +93,22 @@ public class Tabulka {
         else {
             try (
                     Connection spojeni = DriverManager.getConnection("jdbc:mysql://localhost/spanelstina?user=root&password=");
-                    PreparedStatement dotazStrict = spojeni.prepareStatement(
-                            "SET SESSION sql_mode = 'STRICT_TRANS_TABLES';");
-
                     PreparedStatement dotaz = spojeni.prepareStatement(
                             "UPDATE " + tabulka + " \n" +
                                 "SET \n" +
-                                "    otazka = '" + otazka + "' , \n" +
-                                "    odpoved = '" + odpoved + "' , \n" +
-                                "WHERE id = " + id + ";"
+                                "    otazka = ? , \n" +
+                                "    odpoved = ? \n" +
+                                "WHERE id = ?;"
                     )){
-                dotazStrict.execute();
-                dotaz.executeUpdate();
+                dotaz.setString(1, otazka);
+                dotaz.setString(2, odpoved);
+                dotaz.setInt(3, id);
+                int pocetZmen = dotaz.executeUpdate();
+
+                if (pocetZmen == 0) {
+                    throw new SQLException("No rows were updated.");
+                }
+
                 report.setPozitivni(true);
                 report.setZprava("Slovo úspěšně změněno.");
             } catch (
@@ -115,14 +124,16 @@ public class Tabulka {
     public Report smazSlovo(int id, String tabulka){
         try(
                 Connection spojeni = DriverManager.getConnection("jdbc:mysql://localhost/spanelstina?user=root&password=");
-                PreparedStatement dotazStrict = spojeni.prepareStatement(
-                        "SET SESSION sql_mode = 'STRICT_TRANS_TABLES';");
-
                 PreparedStatement dotaz = spojeni.prepareStatement(
-                        "DELETE FROM " + tabulka + " WHERE id = " + id + ";"
+                        "DELETE FROM " + tabulka + " WHERE id = ?;"
                 )){
-            dotazStrict.execute();
-            dotaz.executeUpdate();
+            dotaz.setInt(1, id);
+            int pocetZmen = dotaz.executeUpdate();
+
+            if (pocetZmen == 0) {
+                throw new SQLException("No rows were updated.");
+            }
+
             report.setPozitivni(true);
             report.setZprava("Slovo úspěšně smazáno.");
         }
@@ -131,8 +142,7 @@ public class Tabulka {
             report.setPozitivni(false);
             report.setZprava("Slovo se nepovedlo smazat. Odeslal jsi správné zadání?");
         }
-        System.out.println("SET SESSION sql_mode = 'STRICT_TRANS_TABLES';\n" +
-                "DELETE FROM " + tabulka + " WHERE id = " + id + ";");
+
         return report;
     }
 
@@ -153,8 +163,6 @@ public class Tabulka {
                 SQLException ex){
             System.out.println("Nepovedlo se najít slova v tabulce " + tabulka);
         }
-
-        System.out.println(seznamSlov.size());
 
         return seznamSlov;
     }
