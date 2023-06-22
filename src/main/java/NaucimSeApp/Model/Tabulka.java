@@ -8,8 +8,10 @@ import java.util.ArrayList;
 @Service
 public class Tabulka {
 
+    //report se posílá zpět do controlleru, obsahuje zprávu o průběhu zvolené akce a charakter zprávy (pozitivní / negativní)
     Report report = new Report();
 
+    //vrací seznam názvů tabulek v databázi
     public ArrayList<String> prehledTabulek(){
 
         ArrayList<String> jmenaTabulek = new ArrayList<>();
@@ -35,13 +37,10 @@ public class Tabulka {
     public Report vytvorTabulku(String nazev){
         try(
             Connection spojeni = DriverManager.getConnection("jdbc:mysql://localhost/spanelstina?user=root&password=");
-
-
-
             PreparedStatement dotaz = spojeni.prepareStatement("CREATE TABLE " + nazev + " (\n" +
                     "    id int PRIMARY KEY AUTO_INCREMENT,\n" +
-                    "    cesky varchar(200),\n" +
-                    "    spanelsky varchar(200),\n" +
+                    "    otazka varchar(200),\n" +
+                    "    odpoved varchar(200),\n" +
                     "    znalost int);")){
 
             dotaz.executeUpdate();
@@ -146,6 +145,7 @@ public class Tabulka {
         return report;
     }
 
+    //vrací Slova z vybrané tabulky, později jsou poslána do prohlížeče pro zobrazení nebo zkoušení
     public ArrayList<Slovo> fetchSlovos(String tabulka){
         ArrayList<Slovo> seznamSlov = new ArrayList<>();
 
@@ -166,5 +166,4 @@ public class Tabulka {
 
         return seznamSlov;
     }
-
 }

@@ -1,3 +1,4 @@
+//zasoba je pole slovíček uložených ve formě objektů se stejnou strukturou jako třída Slovo v Javě
 let zasoba;
 
     try {
@@ -13,10 +14,13 @@ let slovo;
 let stareSlovo;
 let pocet = 0;
 
+//řazení na základě znalosti
 function seradZnalost (){
     zasoba.sort(function (a, b){return a.znalost - b.znalost});
 }
 
+
+//losování z první poloviny seřazených slovíček (těch s nejnižší znalostí)
 function vylosuj (){
     do {
         stareSlovo = slovo;
@@ -26,11 +30,12 @@ function vylosuj (){
     return slovo;
 }
 
+//renderování slova pro zkoušení
 function vyberSlovo(){
     seradZnalost();
     vylosuj();
-    document.getElementById("otazka").textContent = slovo.cesky;
-    document.getElementById("odpoved").textContent = slovo.spanelsky;
+    document.getElementById("otazka").textContent = slovo.otazka;
+    document.getElementById("odpoved").textContent = slovo.odpoved;
     document.getElementById("pocet").textContent = "Počítadlo " + pocet;
 }
 
@@ -38,18 +43,21 @@ window.onload = function (){
     vyberSlovo();
 }
 
+//úprava znalosti++
 function vedel (){
     pocet++;
     slovo.znalost++;
     vyberSlovo();
 }
 
+//úprava znalosti--
 function nevedel (){
     pocet++;
     slovo.znalost--;
     vyberSlovo();
 }
 
+//renderování okruhu po ukončení zkoušení (včetně nových hodnot znalostí)
 function zobrazKonec (){
     const zkouseniHTML = document.getElementById("zkouseni");
     zkouseniHTML.innerHTML = "";

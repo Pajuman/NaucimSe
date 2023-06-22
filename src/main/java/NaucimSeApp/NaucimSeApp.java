@@ -11,6 +11,8 @@ import java.sql.*;
 
 @SpringBootApplication
 public class NaucimSeApp {
+
+
     private static void zalozTabulku(String nazevLekce){
         try(
                 Connection spojeni = DriverManager.getConnection("jdbc:mysql://localhost/spanelstina?user=root&password=");
@@ -45,7 +47,7 @@ public class NaucimSeApp {
         }
     }
 
-
+//při spuštění projektu se založí databáze a 3 tabulky se španělskými slovíčky
     public static void main(String[] args) {
         SpringApplication.run(NaucimSeApp.class, args);
 
@@ -57,10 +59,6 @@ public class NaucimSeApp {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-
-        zalozTabulku("rodina");
-        zalozTabulku("zajmena");
-        zalozTabulku("nemoci");
 
         String slovickaRodina =
                 "(1, 'rodina', 'la familia', 0),\n" +
@@ -141,6 +139,10 @@ public class NaucimSeApp {
                 "(28, 'las gotas', 'kapky', 0),\n" +
                 "(29, 'el calmante', 'utišující lék', 0),\n" +
                 "(30, 'el analgésico', 'lék proti bolesti', 0);";
+
+        zalozTabulku("rodina");
+        zalozTabulku("zajmena");
+        zalozTabulku("nemoci");
 
         nahrajSlovicka("rodina", slovickaRodina);
         nahrajSlovicka("zajmena", slovickaZajmena);

@@ -1,7 +1,6 @@
 package NaucimSeApp.Controller;
 
 import NaucimSeApp.Model.Report;
-import NaucimSeApp.Model.Slovnik;
 import NaucimSeApp.Model.Slovo;
 import NaucimSeApp.Model.Tabulka;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -24,8 +23,8 @@ public class MainUIController {
     @Autowired
     Report report;
 
-    //"okruhy" jsou seznam tabulek v databázi
-    //"okruhy" jsou poslány do HTML jako JSON a odtud dále do JS pro práci s DOM (tabulky se přidají jako option do selectu)
+    //"okruhy" jsou seznam názvů tabulek v databázi
+    //"okruhy" jsou poslány do HTML jako JSON a odtud dále do JS pro práci s DOM (názvy tabulek se přidají jako option do selectu)
     @GetMapping
     public String nactiMainUI(Model model) throws JsonProcessingException {
 
